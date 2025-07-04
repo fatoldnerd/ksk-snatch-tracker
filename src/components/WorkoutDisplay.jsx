@@ -37,8 +37,13 @@ const WorkoutDisplay = ({
   }
 
   const phaseData = program.schedule[currentPhase];
-  const dayName = program.dayNames[currentDay - 1]?.toLowerCase();
-  const workout = phaseData?.workouts[dayName];
+  
+  // Direct mapping: Day 1 = Monday, Day 2 = Wednesday, Day 3 = Friday
+  // Ensure currentDay is within valid bounds (1-3)
+  const validCurrentDay = Math.max(1, Math.min(3, currentDay));
+  const workoutPatterns = ['monday', 'wednesday', 'friday'];
+  const mappedWorkoutDay = workoutPatterns[validCurrentDay - 1];
+  const workout = phaseData?.workouts[mappedWorkoutDay];
 
   if (!workout) {
     return (
@@ -63,6 +68,21 @@ const WorkoutDisplay = ({
 
       case 'sets':
         const setsTotal = workout.pattern.reduce((sum, reps) => sum + reps, 0);
+        
+        // For KSK 1.0 Phase 3, show complete weekly pattern
+        if (selectedProgram === '1.0' && currentPhase === 3) {
+          const weeklyPattern = [9, 15, 12]; // Mon, Wed, Fri
+          const weeklyTotal = weeklyPattern.reduce((sum, reps) => sum + reps, 0);
+          return {
+            prescription: `Weekly pattern: ${weeklyPattern.join(', ')} reps per hand (Day 1/Day 2/Day 3)`,
+            repsPerHand: setsTotal, // Current day's reps
+            totalReps: setsTotal * 2, // Current day's total
+            pattern: workout.pattern,
+            weeklyPattern: weeklyPattern,
+            weeklyTotal: weeklyTotal
+          };
+        }
+        
         return {
           prescription: `Sets of ${workout.pattern.join(',')} reps per hand`,
           repsPerHand: setsTotal,
@@ -78,7 +98,7 @@ const WorkoutDisplay = ({
         };
 
       case 'percentage':
-        const ksk3Data = calculateKSK3Reps(maxReps, dayName, currentWeek);
+        const ksk3Data = calculateKSK3Reps(maxReps, mappedWorkoutDay, currentWeek);
         return {
           prescription: `${ksk3Data.percentage}% of max (${ksk3Data.repsPerHand} reps per hand)`,
           repsPerHand: ksk3Data.repsPerHand,
@@ -141,7 +161,7 @@ const WorkoutDisplay = ({
             onChange={(e) => onDayChange(parseInt(e.target.value))}
             className="w-full p-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white shadow-soft transition-all duration-200 hover:border-primary-400 text-neutral-800 font-medium"
           >
-            {program.dayNames.map((day, index) => (
+            {['Day 1', 'Day 2', 'Day 3'].map((day, index) => (
               <option key={index + 1} value={index + 1}>{day}</option>
             ))}
           </select>
@@ -151,7 +171,7 @@ const WorkoutDisplay = ({
       {/* Workout Details */}
       <div className="bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-6 mb-6 border border-primary-200/50">
         <h3 className="font-bold text-xl text-primary-900 mb-3">
-          {program.dayNames[currentDay - 1]} - {phaseData.name}
+          Day {validCurrentDay} - {phaseData.name}
         </h3>
         <p className="text-primary-800 text-lg font-medium">{workoutDetails.prescription}</p>
       </div>
@@ -193,15 +213,27 @@ const WorkoutDisplay = ({
         <div className="mt-6 p-5 bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl border border-violet-200/50">
           <p className="text-sm font-bold text-violet-800 mb-3 flex items-center">
             <div className="text-lg mr-2">📊</div>
-            Set Pattern:
+            {selectedProgram === '1.0' && currentPhase === 3 ? 'Weekly Pattern:' : 'Set Pattern:'}
           </p>
-          <div className="flex flex-wrap gap-3">
-            {workoutDetails.pattern.map((reps, index) => (
-              <span key={index} className="px-4 py-2 bg-gradient-to-r from-violet-200 to-purple-200 text-violet-800 rounded-xl text-sm font-semibold shadow-soft">
-                {reps} reps
-              </span>
-            ))}
-          </div>
+          {selectedProgram === '1.0' && currentPhase === 3 && workoutDetails.weeklyPattern ? (
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-3">
+                {workoutDetails.weeklyPattern.map((reps, index) => (
+                  <span key={index} className="px-4 py-2 bg-gradient-to-r from-violet-200 to-purple-200 text-violet-800 rounded-xl text-sm font-semibold shadow-soft">
+                    Day {index + 1}: {reps} reps
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              {workoutDetails.pattern.map((reps, index) => (
+                <span key={index} className="px-4 py-2 bg-gradient-to-r from-violet-200 to-purple-200 text-violet-800 rounded-xl text-sm font-semibold shadow-soft">
+                  {reps} reps
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

@@ -25,12 +25,22 @@ function App() {
   // Target snatches with localStorage persistence
   const [targetSnatches, setTargetSnatches] = useLocalStorage('ksk-target-snatches', 100)
 
+  // Reset currentDay if it's out of bounds for the new 3-day system
+  useEffect(() => {
+    if (currentDay > 3 || currentDay < 1) {
+      setCurrentDay(1)
+    }
+  }, [currentDay, setCurrentDay])
+
   // Calculate current workout details
   const getCurrentWorkoutDetails = () => {
     if (!selectedProgram) return { targetReps: 0, prescription: '' }
     
-    const dayNames = ['monday', 'wednesday', 'friday']
-    const dayName = dayNames[currentDay - 1]
+    // Direct mapping: Day 1 = Monday, Day 2 = Wednesday, Day 3 = Friday
+    // Ensure currentDay is within valid bounds (1-3)
+    const validCurrentDay = Math.max(1, Math.min(3, currentDay))
+    const workoutPatterns = ['monday', 'wednesday', 'friday']
+    const dayName = workoutPatterns[validCurrentDay - 1]
     
     if (selectedProgram === '3.0') {
       if (!maxReps || maxReps < 1) {
