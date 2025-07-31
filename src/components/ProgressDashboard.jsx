@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 
 /**
  * ProgressDashboard Component
  * Shows workout history, progress charts, weekly summaries, and cumulative volume
  * Displays trends and achievements in the KSK program
  */
-const ProgressDashboard = ({ workoutHistory = [], targetSnatches = 100 }) => {
+const ProgressDashboard = memo(({ workoutHistory = [], targetSnatches = 100 }) => {
   // Calculate summary statistics
   const stats = useMemo(() => {
     if (!workoutHistory.length) {
@@ -425,6 +425,8 @@ const ProgressDashboard = ({ workoutHistory = [], targetSnatches = 100 }) => {
       )}
     </div>
   );
-};
+});
+
+ProgressDashboard.displayName = 'ProgressDashboard';
 
 export default ProgressDashboard;

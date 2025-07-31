@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { KSK_PROGRAMS, calculateKSK3Reps, getTotalRepsForWorkout } from '../data/kskPrograms';
 
 /**
@@ -5,7 +6,7 @@ import { KSK_PROGRAMS, calculateKSK3Reps, getTotalRepsForWorkout } from '../data
  * Shows the current workout prescription based on selected program, phase, week, and day
  * Displays exact rep schemes and targets for each KSK program variant
  */
-const WorkoutDisplay = ({ 
+const WorkoutDisplay = memo(({ 
   selectedProgram, 
   currentPhase, 
   currentWeek, 
@@ -251,6 +252,17 @@ const WorkoutDisplay = ({
       )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison function for React.memo
+  return (
+    prevProps.selectedProgram === nextProps.selectedProgram &&
+    prevProps.currentPhase === nextProps.currentPhase &&
+    prevProps.currentWeek === nextProps.currentWeek &&
+    prevProps.currentDay === nextProps.currentDay &&
+    prevProps.maxReps === nextProps.maxReps
+  );
+});
+
+WorkoutDisplay.displayName = 'WorkoutDisplay';
 
 export default WorkoutDisplay;

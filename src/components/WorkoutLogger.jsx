@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, memo, useCallback, useMemo } from 'react';
 
 /**
  * WorkoutLogger Component
  * Allows users to log their completed workout sessions
  * Tracks date, kettlebell weight, sets/rounds completed, and optional notes/RPE
  */
-const WorkoutLogger = ({ 
+const WorkoutLogger = memo(({ 
   targetReps, 
   workoutPrescription, 
   onLogWorkout,
@@ -26,7 +26,8 @@ const WorkoutLogger = ({
 
   const [isLogging, setIsLogging] = useState(false);
 
-  const handleInputChange = (field, value) => {
+  // Memoize input change handler to prevent re-creation on every render
+  const handleInputChange = useCallback((field, value) => {
     const updatedData = { ...workoutData, [field]: value };
     
     // Auto-calculate total snatches when any relevant field changes
@@ -38,9 +39,10 @@ const WorkoutLogger = ({
     }
     
     setWorkoutData(updatedData);
-  };
+  }, [workoutData]);
 
-  const handleSubmit = (e) => {
+  // Memoize form submission handler
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     setIsLogging(true);
 
@@ -83,9 +85,13 @@ const WorkoutLogger = ({
     });
 
     setIsLogging(false);
-  };
+  }, [workoutData, targetReps, workoutPrescription, programType, onLogWorkout]);
 
-  const completionPercentage = targetReps ? Math.round((workoutData.totalActualReps / targetReps) * 100) : 0;
+  // Memoize completion percentage calculation
+  const completionPercentage = useMemo(() => 
+    targetReps ? Math.round((workoutData.totalActualReps / targetReps) * 100) : 0,
+    [targetReps, workoutData.totalActualReps]
+  );
 
   return (
     <div className="bg-white rounded-2xl shadow-soft border border-neutral-200/50 p-8">
@@ -292,6 +298,8 @@ const WorkoutLogger = ({
       )}
     </div>
   );
-};
+});
+
+WorkoutLogger.displayName = 'WorkoutLogger';
 
 export default WorkoutLogger;

@@ -56,6 +56,10 @@ export default {
         'xl': '1rem',
         '2xl': '1.5rem',
       },
+      scale: {
+        '102': '1.02',
+        '105': '1.05',
+      },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
