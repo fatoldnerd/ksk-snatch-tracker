@@ -356,7 +356,19 @@ function App() {
       <header className="bg-gradient-to-r from-primary-600 via-primary-700 to-accent-600 shadow-large sticky top-0 z-10 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-6 py-6">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">KSK Snatch Tracker</h1>
+            <div className="flex items-center justify-center mb-2">
+              <img 
+                src="/New_Kettlebell.png" 
+                alt="Kettlebell" 
+                className="h-8 w-8 mr-3"
+              />
+              <h1 className="text-3xl font-bold text-white tracking-tight">KSK Snatch Tracker</h1>
+              <img 
+                src="/New_Kettlebell.png" 
+                alt="Kettlebell" 
+                className="h-8 w-8 ml-3"
+              />
+            </div>
             <p className="text-primary-100 text-sm font-medium">Master Geoff Neupert's King-Sized Killer Program</p>
           </div>
         </div>

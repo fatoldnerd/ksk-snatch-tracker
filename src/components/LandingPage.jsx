@@ -13,7 +13,14 @@ function LandingPage({ onGetStarted, onSignIn, currentUser }) {
       <header className="bg-gradient-to-r from-primary-600 via-primary-700 to-accent-600 shadow-large">
         <div className="max-w-4xl mx-auto px-6 py-6">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">KSK Snatch Tracker</h1>
+            <div className="flex items-center justify-center mb-2">
+              <img 
+                src="/New_Kettlebell.png" 
+                alt="Kettlebell" 
+                className="h-10 w-10 mr-3"
+              />
+              <h1 className="text-4xl font-bold text-white tracking-tight">KSK Snatch Tracker</h1>
+            </div>
             <p className="text-primary-100 text-base font-medium">Master Geoff Neupert's King-Sized Killer Program</p>
           </div>
         </div>
