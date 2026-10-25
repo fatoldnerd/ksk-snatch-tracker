@@ -49,3 +49,7 @@ Successfully built a complete KSK Snatch Tracker web application with the follow
 - `src/App.jsx` - Main application with tabs navigation
 
 The application is now fully functional and ready for use. Users can track their complete KSK journey from program selection through workout completion and progress analysis.
+
+## Modern family refresh review (2026-10-25)
+
+Approved scope, design, implementation checklist, verification evidence, and release limits: `docs/plans/2026-10-25-family-refresh.md`. Existing production domains remain unchanged.

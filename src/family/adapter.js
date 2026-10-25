@@ -1,0 +1,3 @@
+import {auth,db,googleProvider} from '../config/firebase';
+import {Timestamp} from 'firebase/firestore';
+export const adapter={auth,db,googleProvider,path:uid=>['users',uid,'workouts'],encode:(r,uid)=>({date:Timestamp.fromDate(new Date(r.date)),userId:uid,kettlebellWeight:r.config.weight,totalReps:r.totalReps,totalActualReps:r.totalReps,setsCompleted:r.entries.length,leftHandReps:r.entries.every(e=>e.left===r.entries[0]?.left)?r.entries[0].left:null,rightHandReps:r.entries.every(e=>e.right===r.entries[0]?.right)?r.entries[0].right:null,programVersion:r.config.program,phase:r.config.phase,week:r.config.week,day:r.config.day,notes:r.notes,duration:r.duration,totalVolume:r.volume})};
